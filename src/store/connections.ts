@@ -1,6 +1,6 @@
 import { fetchConnectionsAPI } from '@/api'
 import { CONNECTION_TAB_TYPE, SORT_DIRECTION, SORT_TYPE } from '@/constant'
-import { getChainsStringFromConnection } from '@/helper'
+import { getChainsStringFromConnection, getInboundUserFromConnection } from '@/helper'
 import type { Connection, ConnectionRawMessage } from '@/types'
 import { useStorage } from '@vueuse/core'
 import dayjs from 'dayjs'
@@ -118,6 +118,9 @@ const sortFunctionMap: Record<SORT_TYPE, (a: Connection, b: Connection) => numbe
   },
   [SORT_TYPE.CONNECT_TIME]: (a: Connection, b: Connection) => {
     return dayjs(a.start).valueOf() - dayjs(b.start).valueOf()
+  },
+  [SORT_TYPE.INBOUND_USER]: (a: Connection, b: Connection) => {
+    return getInboundUserFromConnection(a).localeCompare(getInboundUserFromConnection(b))
   },
 }
 

@@ -183,6 +183,9 @@ const en = {
   importFromFile: 'Import From File',
   importFromUrl: 'Import From URL',
   sync: 'Sync',
+  upgradeSuccess: 'Upgrade Success',
+  upgradeFailed: 'Upgrade Failed',
+  numberOfChartsInSidebar: 'Number of Charts in Sidebar',
 }
 
 export type LANG_MESSAGE = typeof en

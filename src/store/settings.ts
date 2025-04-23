@@ -95,6 +95,11 @@ export const showStatisticsWhenSidebarCollapsed = useStorage(
   'config/show-statistics-when-sidebar-collapsed',
   true,
 )
+export const numberOfChartsInSidebar = useStorage<1 | 2 | 3>(
+  'config/number-of-charts-in-sidebar',
+  2,
+)
+
 // proxies
 export const collapseGroupMap = useStorage<Record<string, boolean>>('config/collapse-group-map', {})
 export const twoColumnProxyGroup = useStorage('config/two-columns', true)

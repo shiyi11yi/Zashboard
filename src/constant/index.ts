@@ -42,6 +42,7 @@ export enum CONNECTIONS_TABLE_ACCESSOR_KEY {
   Destination = 'destination',
   DestinationType = 'destinationType',
   RemoteAddress = 'remoteAddress',
+  InboundUser = 'inboundUser',
 }
 
 export enum TABLE_WIDTH_MODE {
@@ -84,6 +85,7 @@ export enum SORT_TYPE {
   UPLOAD = 'upload',
   UPLOAD_SPEED = 'uploadSpeed',
   SOURCE_IP = 'sourceIP',
+  INBOUND_USER = 'inboundUser',
 }
 
 export enum SORT_DIRECTION {

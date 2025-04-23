@@ -233,7 +233,7 @@ import { isSingBox, upgradeUIAPI, zashboardVersion } from '@/api'
 import LanguageSelect from '@/components/settings/LanguageSelect.vue'
 import { useSettings } from '@/composables/settings'
 import { ALL_THEME, FONTS } from '@/constant'
-import { exportSettings } from '@/helper'
+import { exportSettings, handlerUpgradeResponse } from '@/helper'
 import { useTooltip } from '@/helper/tooltip'
 import {
   deleteBase64FromIndexedDB,
@@ -300,9 +300,15 @@ const handlerClickUpgradeUI = async () => {
   if (isUIUpgrading.value) return
   isUIUpgrading.value = true
   try {
-    await upgradeUIAPI()
+    const res = await upgradeUIAPI()
     isUIUpgrading.value = false
-    window.location.reload()
+
+    handlerUpgradeResponse(res)
+    if (res.status === 200) {
+      setTimeout(() => {
+        window.location.reload()
+      }, 1000)
+    }
   } catch {
     isUIUpgrading.value = false
   }

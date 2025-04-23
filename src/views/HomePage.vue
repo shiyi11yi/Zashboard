@@ -33,11 +33,11 @@
         <template v-if="isMiddleScreen">
           <div
             class="nav-bar shrink-0"
-            :class="isPWA ? 'h-[5.5rem]' : 'h-14'"
+            :style="styleForSafeArea"
           />
           <div
-            class="dock dock-sm bg-base-200 z-30"
-            :class="isPWA ? 'h-[5.5rem] pb-8' : 'h-14'"
+            class="dock dock-sm bg-base-200 z-30 shrink-0"
+            :style="styleForSafeArea"
           >
             <button
               v-for="r in renderRoutes"
@@ -47,7 +47,7 @@
             >
               <component
                 :is="ROUTE_ICON_MAP[r]"
-                class="size-5 shrink-0"
+                class="size-5"
               />
               <span class="dock-label">
                 {{ $t(r) }}
@@ -93,7 +93,7 @@ import { useSettings } from '@/composables/settings'
 import { useSwipeRouter } from '@/composables/swipe'
 import { PROXY_TAB_TYPE, ROUTE_ICON_MAP, ROUTE_NAME, RULE_TAB_TYPE } from '@/constant'
 import { getUrlFromBackend, renderRoutes } from '@/helper'
-import { isMiddleScreen, isPWA } from '@/helper/utils'
+import { isMiddleScreen } from '@/helper/utils'
 import { fetchConfigs } from '@/store/config'
 import { initConnections } from '@/store/connections'
 import { initLogs } from '@/store/logs'
@@ -104,7 +104,7 @@ import { isSidebarCollapsed } from '@/store/settings'
 import { activeBackend, activeUuid, backendList } from '@/store/setup'
 import type { Backend } from '@/types'
 import { useDocumentVisibility } from '@vueuse/core'
-import { ref, watch, type Component } from 'vue'
+import { computed, ref, watch, type Component } from 'vue'
 import { RouterView, useRouter } from 'vue-router'
 
 const ctrlsMap: Record<string, Component> = {
@@ -117,7 +117,12 @@ const ctrlsMap: Record<string, Component> = {
 const router = useRouter()
 const { proxiesTabShow } = useProxies()
 const { swiperRef } = useSwipeRouter()
-
+const styleForSafeArea = computed(() => {
+  return {
+    height: 'calc(var(--spacing) * 14 + env(safe-area-inset-bottom))',
+    'padding-bottom': 'env(safe-area-inset-bottom)',
+  }
+})
 watch(
   activeUuid,
   () => {

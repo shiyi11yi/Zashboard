@@ -7,7 +7,22 @@
       <VueJsonPretty
         :data="infoConn"
         class="overflow-y-auto px-4"
-      />
+      >
+        <template #renderNodeValue="{ node, defaultValue }">
+          <template v-if="node.path.startsWith('root.chains') && proxyMap[node.content]?.icon">
+            <span>
+              "<ProxyIcon
+                :icon="proxyMap[node.content].icon"
+                class="mr-2 inline-block"
+              />
+              {{ node.content }}"
+            </span>
+          </template>
+          <template v-else>
+            {{ defaultValue }}
+          </template>
+        </template>
+      </VueJsonPretty>
       <div
         class="min-h-12 shrink-0 px-4 pt-2 text-sm"
         v-if="destinationIP && !isPrivateIP"
@@ -49,10 +64,12 @@
 import { getIPFromIpsbAPI, type GlobalIPType } from '@/api'
 import DialogWrapper from '@/components/common/DialogWrapper.vue'
 import { useConnections } from '@/composables/connections'
+import { proxyMap } from '@/store/proxies'
 import { ArrowRightCircleIcon, MapPinIcon, ServerIcon } from '@heroicons/vue/24/outline'
 import { computed, ref, watch } from 'vue'
 import VueJsonPretty from 'vue-json-pretty'
 import 'vue-json-pretty/lib/styles.css'
+import ProxyIcon from '../proxies/ProxyIcon.vue'
 
 const { infoConn, connectionDetailModalShow } = useConnections()
 const details = ref<GlobalIPType | null>(null)

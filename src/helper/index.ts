@@ -1,3 +1,4 @@
+import { useNotification } from '@/composables/notification'
 import { proxiesFilter } from '@/composables/proxies'
 import {
   NOT_CONNECTED,
@@ -6,6 +7,7 @@ import {
   PROXY_TYPE,
   ROUTE_NAME,
 } from '@/constant'
+import { i18n } from '@/i18n'
 import { timeSaved } from '@/store/overview'
 import { getLatencyByName, hiddenGroupMap, proxyMap } from '@/store/proxies'
 import {
@@ -19,6 +21,7 @@ import {
   splitOverviewPage,
 } from '@/store/settings'
 import type { Backend, Connection } from '@/types'
+import type { AxiosError, AxiosResponse } from 'axios'
 import dayjs from 'dayjs'
 import prettyBytes, { type Options } from 'pretty-bytes'
 import { computed, watch } from 'vue'
@@ -204,6 +207,15 @@ export const getNetworkTypeFromConnection = (connection: Connection) => {
   return `${connection.metadata.type} | ${connection.metadata.network}`
 }
 
+export const getInboundUserFromConnection = (connection: Connection) => {
+  return (
+    connection.metadata.inboundUser ||
+    connection.metadata.inboundName ||
+    connection.metadata.inboundPort ||
+    '-'
+  )
+}
+
 export const getToolTipForParams = (
   params: ToolTipParams,
   config: {
@@ -293,4 +305,20 @@ export const isHiddenGroup = (group: string) => {
   }
 
   return proxyMap.value[group]?.hidden
+}
+
+export const handlerUpgradeResponse = (res: AxiosResponse | AxiosError<{ message: string }>) => {
+  const { showNotification } = useNotification()
+
+  if (res.status === 200) {
+    showNotification({
+      content: i18n.global.t('upgradeSuccess'),
+      type: 'alert-success',
+    })
+  } else {
+    showNotification({
+      content: `${i18n.global.t('upgradeFailed')} ${(res as AxiosError<{ message: string }>).response?.data?.message}`,
+      type: 'alert-error',
+    })
+  }
 }

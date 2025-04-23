@@ -17,7 +17,7 @@ export const useNotification = () => {
   }: {
     content: string
     params?: Record<string, string>
-    type?: 'alert-warning' | 'alert-success'
+    type?: 'alert-warning' | 'alert-success' | 'alert-error'
     timeout?: number
   }) => {
     clearTimeout(timmer)

@@ -182,6 +182,9 @@ const zh: LANG_MESSAGE = {
   importFromFile: '从文件导入',
   importFromUrl: '从 URL 导入',
   sync: '同步',
+  upgradeSuccess: '更新成功',
+  upgradeFailed: '更新失败',
+  numberOfChartsInSidebar: '侧边栏图表数量',
 }
 
 export default zh
