@@ -36,7 +36,7 @@
             :style="styleForSafeArea"
           />
           <div
-            class="dock dock-sm bg-base-200 z-30 shrink-0"
+            class="dock dock-sm bg-base-200 z-30"
             :style="styleForSafeArea"
           >
             <button
@@ -104,7 +104,7 @@ import { isSidebarCollapsed } from '@/store/settings'
 import { activeBackend, activeUuid, backendList } from '@/store/setup'
 import type { Backend } from '@/types'
 import { useDocumentVisibility } from '@vueuse/core'
-import { computed, ref, watch, type Component } from 'vue'
+import { ref, watch, type Component } from 'vue'
 import { RouterView, useRouter } from 'vue-router'
 
 const ctrlsMap: Record<string, Component> = {
@@ -114,15 +114,15 @@ const ctrlsMap: Record<string, Component> = {
   [ROUTE_NAME.rules]: RulesCtrl,
 }
 
+const styleForSafeArea = {
+  height: 'calc(var(--spacing) * 14 + env(safe-area-inset-bottom))',
+  'padding-bottom': 'env(safe-area-inset-bottom)',
+}
+
 const router = useRouter()
 const { proxiesTabShow } = useProxies()
 const { swiperRef } = useSwipeRouter()
-const styleForSafeArea = computed(() => {
-  return {
-    height: 'calc(var(--spacing) * 14 + env(safe-area-inset-bottom))',
-    'padding-bottom': 'env(safe-area-inset-bottom)',
-  }
-})
+
 watch(
   activeUuid,
   () => {

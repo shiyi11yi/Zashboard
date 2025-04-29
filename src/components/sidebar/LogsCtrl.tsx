@@ -67,7 +67,7 @@ export default defineComponent({
           v-model={logFilter.value}
           beforeClose={true}
           class="flex-1"
-          placeholder={t('search')}
+          placeholder={`${t('search')} | Regex`}
           clearable={true}
           menus={logSearchHistory.value}
         />

@@ -47,24 +47,25 @@
         </div>
 
         <div class="flex h-4 items-center justify-between gap-1">
-          <span class="text-base-content/60 text-xs">
-            {{ proxyGroup.type }} ({{ proxiesCount }})
-          </span>
-          <button
-            v-if="manageHiddenGroup"
-            class="btn btn-circle btn-xs z-10 ml-1"
-            @click.stop="handlerGroupToggle"
-          >
-            <EyeIcon
-              v-if="!hiddenGroup"
-              class="h-3 w-3"
-            />
-            <EyeSlashIcon
-              v-else
-              class="h-3 w-3"
-            />
-          </button>
-          <div class="flex-1"></div>
+          <div class="flex flex-1 items-center gap-1 truncate">
+            <span class="text-base-content/60 shrink-0 text-xs">
+              {{ proxyGroup.type }} ({{ proxiesCount }})
+            </span>
+            <button
+              v-if="manageHiddenGroup"
+              class="btn btn-circle btn-xs z-10"
+              @click.stop="handlerGroupToggle"
+            >
+              <EyeIcon
+                v-if="!hiddenGroup"
+                class="h-3 w-3"
+              />
+              <EyeSlashIcon
+                v-else
+                class="h-3 w-3"
+              />
+            </button>
+          </div>
           <LatencyTag
             :class="twMerge('bg-base-200/50 z-10 hover:shadow-sm')"
             :loading="isLatencyTesting"

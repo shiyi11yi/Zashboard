@@ -151,7 +151,7 @@ import {
 import BackendVersion from '@/components/common/BackendVersion.vue'
 import BackendSwitch from '@/components/settings/BackendSwitch.vue'
 import DnsQuery from '@/components/settings/DnsQuery.vue'
-import { handlerUpgradeResponse } from '@/helper'
+import { handlerUpgradeSuccess } from '@/helper'
 import { configs, fetchConfigs, updateConfigs } from '@/store/config'
 import { fetchProxies } from '@/store/proxies'
 import { fetchRules } from '@/store/rules'
@@ -210,10 +210,9 @@ const handlerClickUpgradeCore = async () => {
   if (isCoreUpgrading.value) return
   isCoreUpgrading.value = true
   try {
-    const res = await upgradeCoreAPI()
+    await upgradeCoreAPI()
     reloadAll()
-
-    handlerUpgradeResponse(res)
+    handlerUpgradeSuccess()
     isCoreUpgrading.value = false
   } catch (e) {
     console.error(e)

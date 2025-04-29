@@ -17,18 +17,23 @@ axios.interceptors.request.use((config) => {
 })
 
 axios.interceptors.response.use(null, (error) => {
+  const { showNotification } = useNotification()
+
   if (error.status === 401 && activeUuid.value) {
     removeBackend(activeUuid.value)
     activeUuid.value = null
     router.push({ name: ROUTE_NAME.setup })
     nextTick(() => {
-      const { showNotification } = useNotification()
-
       showNotification({ content: 'unauthorizedTip' })
+    })
+  } else {
+    showNotification({
+      content: error.response?.data?.message || error.message,
+      type: 'alert-error',
     })
   }
 
-  return error
+  return Promise.reject(error)
 })
 
 export const version = ref()
@@ -45,7 +50,7 @@ watch(
     if (val) {
       const { data } = await fetchVersionAPI()
 
-      version.value = data.version
+      version.value = data?.version || ''
       if (isSingBox.value || !checkUpgradeCore.value || activeBackend.value?.disableUpgradeCore)
         return
       isCoreUpdateAvailable.value = await fetchBackendUpdateAvailableAPI()

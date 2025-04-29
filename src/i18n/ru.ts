@@ -186,7 +186,6 @@ const ru: LANG_MESSAGE = {
   importFromUrl: 'Импортировать из URL',
   sync: 'Синхронизировать',
   upgradeSuccess: 'Обновление успешно',
-  upgradeFailed: 'Обновление не удалось',
   numberOfChartsInSidebar: 'Количество графиков в боковой панели',
 }
 

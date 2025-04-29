@@ -7,7 +7,6 @@ import {
   PROXY_TYPE,
   ROUTE_NAME,
 } from '@/constant'
-import { i18n } from '@/i18n'
 import { timeSaved } from '@/store/overview'
 import { getLatencyByName, hiddenGroupMap, proxyMap } from '@/store/proxies'
 import {
@@ -21,7 +20,6 @@ import {
   splitOverviewPage,
 } from '@/store/settings'
 import type { Backend, Connection } from '@/types'
-import type { AxiosError, AxiosResponse } from 'axios'
 import dayjs from 'dayjs'
 import prettyBytes, { type Options } from 'pretty-bytes'
 import { computed, watch } from 'vue'
@@ -307,18 +305,11 @@ export const isHiddenGroup = (group: string) => {
   return proxyMap.value[group]?.hidden
 }
 
-export const handlerUpgradeResponse = (res: AxiosResponse | AxiosError<{ message: string }>) => {
+export const handlerUpgradeSuccess = () => {
   const { showNotification } = useNotification()
 
-  if (res.status === 200) {
-    showNotification({
-      content: i18n.global.t('upgradeSuccess'),
-      type: 'alert-success',
-    })
-  } else {
-    showNotification({
-      content: `${i18n.global.t('upgradeFailed')} ${(res as AxiosError<{ message: string }>).response?.data?.message}`,
-      type: 'alert-error',
-    })
-  }
+  showNotification({
+    content: 'upgradeSuccess',
+    type: 'alert-success',
+  })
 }

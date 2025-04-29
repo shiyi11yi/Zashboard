@@ -184,7 +184,6 @@ const en = {
   importFromUrl: 'Import From URL',
   sync: 'Sync',
   upgradeSuccess: 'Upgrade Success',
-  upgradeFailed: 'Upgrade Failed',
   numberOfChartsInSidebar: 'Number of Charts in Sidebar',
 }
 

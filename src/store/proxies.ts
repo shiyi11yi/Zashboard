@@ -70,9 +70,21 @@ export const getIPv6ByName = (proxyName: string) => {
   return IPv6Map.value[getNowProxyNodeName(proxyName)]
 }
 
+let fetchTime = 0
+
 export const fetchProxies = async () => {
-  const { data: proxyData } = await fetchProxiesAPI()
-  const { data: providerData } = await fetchProxyProviderAPI()
+  const nowTime = Date.now()
+
+  fetchTime = nowTime
+
+  const [proxyRes, providerRes] = await Promise.all([fetchProxiesAPI(), fetchProxyProviderAPI()])
+  const proxyData = proxyRes.data
+  const providerData = providerRes.data
+
+  if (fetchTime !== nowTime) {
+    return
+  }
+
   const sortIndex = proxyData.proxies[GLOBAL].all ?? []
   const allProviderProxies: Record<string, Proxy> = {}
   const providers = Object.values(providerData.providers).filter(
