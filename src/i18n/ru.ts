@@ -187,6 +187,13 @@ const ru: LANG_MESSAGE = {
   sync: 'Синхронизировать',
   upgradeSuccess: 'Обновление успешно',
   numberOfChartsInSidebar: 'Количество графиков в боковой панели',
+  displayWeights: 'Показать веса',
+  flushWeights: 'Очистить веса',
+  flushSmartWeights: 'Очистить Smart веса',
+  IPInfoAPI: 'API информации о IP',
+  IPInfoAPITip:
+    'Этот API будет использоваться для проверки IP-адресов при запросах информации о глобальных узлах, определения геолокации IP-адресов в деталях соединения, а также для определения геолокации IP-адресов при DNS-запросах в панели.',
+  general: 'Универсальный',
 }
 
 export default ru

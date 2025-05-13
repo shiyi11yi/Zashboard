@@ -184,6 +184,13 @@ const zh: LANG_MESSAGE = {
   sync: '同步',
   upgradeSuccess: '更新成功',
   numberOfChartsInSidebar: '侧边栏图表数量',
+  displayWeights: '显示权重',
+  flushWeights: '清空权重',
+  flushSmartWeights: '清空Smart权重',
+  IPInfoAPI: 'IP信息API',
+  IPInfoAPITip:
+    '此API会用于IP检查中全球节点IP信息查询、连接详情中的IP地理信息查询、面板DNS查询中的IP地理信息查询。',
+  general: '通用',
 }
 
 export default zh

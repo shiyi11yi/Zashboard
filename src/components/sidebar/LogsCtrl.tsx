@@ -70,6 +70,8 @@ export default defineComponent({
           placeholder={`${t('search')} | Regex`}
           clearable={true}
           menus={logSearchHistory.value}
+          menusDeleteable={true}
+          onUpdate:menus={(val) => (logSearchHistory.value = val)}
         />
       )
 

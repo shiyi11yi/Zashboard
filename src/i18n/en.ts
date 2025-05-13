@@ -185,6 +185,13 @@ const en = {
   sync: 'Sync',
   upgradeSuccess: 'Upgrade Success',
   numberOfChartsInSidebar: 'Number of Charts in Sidebar',
+  displayWeights: 'Display Weights',
+  flushWeights: 'Flush Weights',
+  flushSmartWeights: 'Flush Smart Weights',
+  IPInfoAPI: 'IP Info API',
+  IPInfoAPITip:
+    "This API will be used for IP checks in global node IP information queries, IP geolocation queries in connection details, and IP geolocation queries in zashboard's DNS query feature.",
+  general: 'General',
 }
 
 export type LANG_MESSAGE = typeof en

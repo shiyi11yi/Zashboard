@@ -3,6 +3,7 @@
     <ZashboardSettings />
     <OverviewCard v-if="!splitOverviewPage" />
     <BackendSettings />
+    <GeneralSettings />
     <ProxiesSettings />
 
     <template v-if="isMounted">
@@ -15,6 +16,7 @@
 <script setup lang="ts">
 import BackendSettings from '@/components/settings/BackendSettings.vue'
 import ConnectionsSettings from '@/components/settings/ConnectionsSettings.vue'
+import GeneralSettings from '@/components/settings/GeneralSettings.vue'
 import OverviewCard from '@/components/settings/OverviewCard.vue'
 import OverviewSettings from '@/components/settings/OverviewSettings.vue'
 import ProxiesSettings from '@/components/settings/ProxiesSettings.vue'
