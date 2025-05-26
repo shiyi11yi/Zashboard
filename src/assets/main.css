@@ -48,6 +48,10 @@
   }
 }
 
+@utility tab {
+  @apply max-md:min-w-24;
+}
+
 @utility table {
   & tr {
     @apply border-b-0;
