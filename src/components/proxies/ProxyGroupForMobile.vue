@@ -12,7 +12,7 @@
     ></div>
     <div
       class="card absolute overflow-hidden transition-[max-height,width,transform] duration-250 ease-in-out will-change-[max-height,width,transform]"
-      :class="blurIntensity < 5 && 'backdrop-blur-sm!'"
+      :class="modalMode && blurIntensity < 5 && 'backdrop-blur-sm!'"
       :style="cardStyle"
       @contextmenu.prevent.stop="handlerLatencyTest"
       @transitionend="handlerTransitionEnd"
