@@ -205,6 +205,8 @@ const en = {
   autoDisconnectIdleUDPTip:
     'When enabled, opening the zashboard will close UDP connections that have been active for longer than the configured number of minutes. This may help with certain UDP connections that do not disconnect automatically as expected.',
   customGlobalNode: 'Custom Global Node',
+  proxiesRelationship: 'Proxies Relationship',
+  displayProxiesRelationship: 'Display Proxies Relationship',
 }
 
 export type LANG_MESSAGE = typeof en
