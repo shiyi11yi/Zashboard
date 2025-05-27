@@ -2,7 +2,9 @@
   <div class="flex flex-col gap-2 p-2 text-sm">
     <StatisticsStats type="ctrl" />
     <div class="flex gap-2">
-      {{ $t('version') }}
+      <span class="shrink-0">
+        {{ $t('version') }}
+      </span>
       <BackendVersion />
     </div>
 

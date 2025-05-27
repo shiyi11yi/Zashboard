@@ -1,10 +1,13 @@
 import { fetchRuleProvidersAPI, fetchRulesAPI } from '@/api'
+import { RULE_TAB_TYPE } from '@/constant'
 import type { Rule, RuleProvider } from '@/types'
 import { computed, ref } from 'vue'
 
+export const rulesFilter = ref('')
+export const rulesTabShow = ref(RULE_TAB_TYPE.RULES)
+
 export const rules = ref<Rule[]>([])
 export const ruleProviderList = ref<RuleProvider[]>([])
-export const rulesFilter = ref('')
 
 export const renderRules = computed(() => {
   if (rulesFilter.value === '') {

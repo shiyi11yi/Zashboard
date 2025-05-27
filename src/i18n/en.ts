@@ -115,7 +115,7 @@ const en = {
   globalIP: 'Global IP',
   networkInfo: 'Network Info',
   autoSwitchTheme: 'Auto Switch Theme',
-  customBackgroundURL: 'Background URL',
+  customBackgroundURL: 'Background',
   splitOverviewPage: 'Split Overview Page',
   manageHiddenGroup: 'Manage Hidden Groups',
   showIPAndConnectionInfo: 'Display IP and Connection Info',
@@ -138,6 +138,8 @@ const en = {
   manual: 'Manual',
   tableWidthMode: 'Table Width Mode',
   testFinishedTip: '{number} Test Finished',
+  testFinishedResultTip: 'Test Finished, {success} Success, {failed} Timeout',
+  testFailedTip: 'Latency Test Timeout',
   updateFinishedTip: '{number} Update Finished',
   independentLatencyTest: 'Independent Latency Test',
   independentLatencyTestTip:
@@ -153,6 +155,7 @@ const en = {
   label: 'Label',
   optional: 'Optional',
   swipeInTabs: 'Swipe to Switch Between Tabs',
+  swipeInPages: 'Swipe to Switch Between Pages',
   simpleCardPreset: 'Simple Preset',
   detailedCardPreset: 'Detailed Preset',
   refresh: 'Refresh',
@@ -192,6 +195,18 @@ const en = {
   IPInfoAPITip:
     "This API will be used for IP checks in global node IP information queries, IP geolocation queries in connection details, and IP geolocation queries in zashboard's DNS query feature.",
   general: 'General',
+  groupProxiesByProvider: 'Group Proxies by Provider',
+  RarelyUsed: 'Rarely Used',
+  OccasionalUsed: 'Occasional Used',
+  MostUsed: 'Most Used',
+  all: 'All',
+  autoDisconnectIdleUDP: 'Auto Disconnect Idle UDP',
+  autoDisconnectIdleUDPTime: 'UDP Idle Time',
+  autoDisconnectIdleUDPTip:
+    'When enabled, opening the zashboard will close UDP connections that have been active for longer than the configured number of minutes. This may help with certain UDP connections that do not disconnect automatically as expected.',
+  customGlobalNode: 'Custom Global Node',
+  proxiesRelationship: 'Proxies Relationship',
+  displayProxiesRelationship: 'Display Proxies Relationship',
 }
 
 export type LANG_MESSAGE = typeof en

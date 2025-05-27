@@ -1,5 +1,4 @@
 import { useNotification } from '@/composables/notification'
-import { proxiesFilter } from '@/composables/proxies'
 import {
   NOT_CONNECTED,
   PROXY_CHAIN_DIRECTION,
@@ -8,7 +7,7 @@ import {
   ROUTE_NAME,
 } from '@/constant'
 import { timeSaved } from '@/store/overview'
-import { getLatencyByName, hiddenGroupMap, proxyMap } from '@/store/proxies'
+import { getLatencyByName, hiddenGroupMap, proxiesFilter, proxyMap } from '@/store/proxies'
 import {
   customThemes,
   hideUnavailableProxies,
@@ -16,24 +15,12 @@ import {
   mediumLatency,
   proxyChainDirection,
   proxySortType,
-  sourceIPLabelList,
   splitOverviewPage,
 } from '@/store/settings'
-import type { Backend, Connection } from '@/types'
+import type { Connection } from '@/types'
 import dayjs from 'dayjs'
-import prettyBytes, { type Options } from 'pretty-bytes'
-import { computed, watch } from 'vue'
-
-export const prettyBytesHelper = (bytes: number, opts?: Options) => {
-  return prettyBytes(bytes, {
-    binary: false,
-    ...opts,
-  })
-}
-
-export const fromNow = (timestamp: string) => {
-  return dayjs(timestamp).fromNow()
-}
+import { computed } from 'vue'
+import { prettyBytesHelper } from './utils'
 
 export const isProxyGroup = (name: string) => {
   const proxyNode = proxyMap.value[name]
@@ -96,69 +83,6 @@ export const sortAndFilterProxyNodes = (proxies: string[], groupName?: string) =
     case PROXY_SORT_TYPE.LATENCY_DESC:
       return proxies.sort((prev, next) => getLatencyForSort(next) - getLatencyForSort(prev))
   }
-}
-
-const CACHE_SIZE = 256
-const ipLabelCache = new Map<string, string>()
-const sourceIPMap = new Map<string, string>()
-const sourceIPRegexList: { regex: RegExp; label: string }[] = []
-
-const preprocessSourceIPList = () => {
-  ipLabelCache.clear()
-  sourceIPMap.clear()
-  sourceIPRegexList.length = 0
-
-  for (const { key, label } of sourceIPLabelList.value) {
-    if (key.startsWith('/')) {
-      sourceIPRegexList.push({ regex: new RegExp(key.slice(1), 'i'), label })
-    } else {
-      sourceIPMap.set(key, label)
-    }
-  }
-}
-
-const cacheResult = (ip: string, label: string) => {
-  ipLabelCache.set(ip, label)
-
-  if (ipLabelCache.size > CACHE_SIZE) {
-    const firstKey = ipLabelCache.keys().next().value
-
-    if (firstKey) {
-      ipLabelCache.delete(firstKey)
-    }
-  }
-
-  return label
-}
-
-watch(sourceIPLabelList, preprocessSourceIPList, { immediate: true, deep: true })
-
-export const getIPLabelFromMap = (ip: string) => {
-  if (!ip) return ip === '' ? 'Inner' : ''
-
-  if (ipLabelCache.has(ip)) {
-    return ipLabelCache.get(ip)!
-  }
-
-  const isIPv6 = ip.includes(':')
-
-  if (isIPv6) {
-    for (const [key, label] of sourceIPMap.entries()) {
-      if (ip.endsWith(key)) {
-        return cacheResult(ip, label)
-      }
-    }
-  } else if (sourceIPMap.has(ip)) {
-    return cacheResult(ip, sourceIPMap.get(ip)!)
-  }
-
-  for (const { regex, label } of sourceIPRegexList) {
-    if (regex.test(ip)) {
-      return cacheResult(ip, label)
-    }
-  }
-
-  return cacheResult(ip, ip)
 }
 
 export const getHostFromConnection = (connection: Connection) => {
@@ -235,28 +159,6 @@ export const getToolTipForParams = (
         binary: binary,
       })}${suffix}
     </div>`
-}
-
-export const exportSettings = () => {
-  const settings: Record<string, string | null> = {}
-
-  for (const key in localStorage) {
-    if (key.startsWith('config/') || key.startsWith('setup/')) {
-      settings[key] = localStorage.getItem(key)
-    }
-  }
-
-  const blob = new Blob([JSON.stringify(settings, null, 2)], { type: 'application/json' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = 'zashboard-settings'
-  a.click()
-  URL.revokeObjectURL(url)
-}
-
-export const getUrlFromBackend = (end: Omit<Backend, 'uuid'>) => {
-  return `${end.protocol}://${end.host}:${end.port}${end.secondaryPath || ''}`
 }
 
 export const getColorForLatency = (latency: number) => {

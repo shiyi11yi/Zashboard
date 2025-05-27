@@ -116,7 +116,7 @@ const zh: LANG_MESSAGE = {
   globalIP: '全球节点 IP',
   networkInfo: '网络信息',
   autoSwitchTheme: '自动切换主题',
-  customBackgroundURL: '背景 URL',
+  customBackgroundURL: '面板背景',
   splitOverviewPage: '分离概览页',
   manageHiddenGroup: '管理隐藏代理组',
   showIPAndConnectionInfo: '显示 IP 和连接信息',
@@ -139,6 +139,8 @@ const zh: LANG_MESSAGE = {
   manual: '手动',
   tableWidthMode: '表格宽度模式',
   testFinishedTip: '{number} 测试完成',
+  testFinishedResultTip: '测试完成，{success} 测试成功，{failed} 测试超时',
+  testFailedTip: '测速超时',
   updateFinishedTip: '{number} 更新完成',
   independentLatencyTest: '独立延迟测试',
   independentLatencyTestTip:
@@ -153,6 +155,7 @@ const zh: LANG_MESSAGE = {
   label: '标签',
   optional: '可选',
   swipeInTabs: '滑动切换页面二级标签',
+  swipeInPages: '滑动切换页面',
   simpleCardPreset: '简洁预设',
   detailedCardPreset: '详细预设',
   refresh: '刷新',
@@ -191,6 +194,18 @@ const zh: LANG_MESSAGE = {
   IPInfoAPITip:
     '此API会用于IP检查中全球节点IP信息查询、连接详情中的IP地理信息查询、面板DNS查询中的IP地理信息查询。',
   general: '通用',
+  groupProxiesByProvider: '节点根据提供商分组',
+  RarelyUsed: '很少使用',
+  OccasionalUsed: '偶尔使用',
+  MostUsed: '经常使用',
+  all: '全部',
+  autoDisconnectIdleUDP: '自动断开空闲UDP',
+  autoDisconnectIdleUDPTime: 'UDP空闲时间',
+  autoDisconnectIdleUDPTip:
+    '启用后，打开zashboard时将关闭持续时间超过配置分钟数的UDP连接，这可能对某些无法正常自动断开的UDP连接带来帮助。(这是作者自己的私货，你大概率不需要打开它)',
+  customGlobalNode: '自定义全局节点',
+  proxiesRelationship: '节点关系',
+  displayProxiesRelationship: '显示节点关系',
 }
 
 export default zh

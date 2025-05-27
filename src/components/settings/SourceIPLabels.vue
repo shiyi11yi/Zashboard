@@ -34,66 +34,51 @@
           @start="disableSwipe = true"
           @end="disableSwipe = false"
         >
-          <template #item="{ element: { id, key, label } }">
-            <div
-              :key="id"
-              class="flex items-center gap-2"
+          <template #item="{ element: sourceIP }">
+            <SourceIPInput
+              :model-value="sourceIP"
+              @update:model-value="handlerLabelUpdate"
             >
-              <ChevronUpDownIcon class="drag-handle h-4 w-4 shrink-0 cursor-grab" />
-              <TextInput
-                class="w-36 max-w-64 flex-1"
-                :modelValue="key"
-                :menus="sourceList"
-                @change="(e) => handlerLabelKeyChange(id, 'key', e)"
-              />
-              <ArrowRightCircleIcon class="h-4 w-4 shrink-0" />
-              <TextInput
-                class="w-28 sm:w-40"
-                :modelValue="label"
-                @change="(e) => handlerLabelKeyChange(id, 'label', e)"
-              />
-              <button
-                class="btn btn-circle btn-ghost btn-sm"
-                @click="() => handlerLabelRemove(id)"
-              >
-                <TrashIcon class="h-4 w-4" />
-              </button>
-            </div>
+              <template #prefix>
+                <ChevronUpDownIcon class="drag-handle h-4 w-4 shrink-0 cursor-grab" />
+              </template>
+              <template #default>
+                <button
+                  class="btn btn-circle btn-ghost btn-sm"
+                  @click="() => handlerLabelRemove(sourceIP.id)"
+                >
+                  <TrashIcon class="h-4 w-4" />
+                </button>
+              </template>
+            </SourceIPInput>
           </template>
         </Draggable>
       </div>
     </div>
   </div>
-  <div class="flex w-full items-center gap-2">
-    <TagIcon class="h-4 w-4 shrink-0" />
-    <TextInput
-      class="w-36 max-w-64 flex-1"
-      :menus="sourceList"
-      v-model="newLabelForIP.key"
-      placeholder="IP | eui64 | /Regex"
-    />
-    <ArrowRightCircleIcon class="h-4 w-4 shrink-0" />
-    <TextInput
-      class="w-28 sm:w-40"
-      v-model="newLabelForIP.label"
-      :placeholder="$t('label')"
-      @keypress.enter="handlerLabelAdd"
-    />
-    <button
-      class="btn btn-circle btn-sm"
-      @click="handlerLabelAdd"
-    >
-      <PlusIcon class="h-4 w-4" />
-    </button>
-  </div>
+  <SourceIPInput
+    v-model="newLabelForIP"
+    @keydown.enter="handlerLabelAdd"
+  >
+    <template #prefix>
+      <TagIcon class="h-4 w-4 shrink-0" />
+    </template>
+    <template #default>
+      <button
+        class="btn btn-circle btn-sm"
+        @click="handlerLabelAdd"
+      >
+        <PlusIcon class="h-4 w-4" />
+      </button>
+    </template>
+  </SourceIPInput>
 </template>
 
 <script setup lang="ts">
 import { disableSwipe } from '@/composables/swipe'
-import { connections } from '@/store/connections'
 import { sourceIPLabelList } from '@/store/settings'
+import type { SourceIPLabel } from '@/types'
 import {
-  ArrowRightCircleIcon,
   ChevronDownIcon,
   ChevronUpDownIcon,
   ChevronUpIcon,
@@ -101,39 +86,33 @@ import {
   TagIcon,
   TrashIcon,
 } from '@heroicons/vue/24/outline'
-import { uniq } from 'lodash'
+import { useSessionStorage } from '@vueuse/core'
 import { v4 as uuid } from 'uuid'
-import { computed, reactive, ref } from 'vue'
+import { ref } from 'vue'
 import Draggable from 'vuedraggable'
-import TextInput from '../common/TextInput.vue'
+import SourceIPInput from './SourceIPInput.vue'
 
-const dialogVisible = ref(false)
-const sourceList = computed(() => {
-  return uniq(connections.value.map((conn) => conn.metadata.sourceIP))
-    .filter(Boolean)
-    .filter((ip) => !sourceIPLabelList.value.find((item) => item.key === ip))
-    .sort()
-})
-
-const newLabelForIP = reactive({
+const dialogVisible = useSessionStorage('cache/sourceip-label-dialog-visible', false)
+const newLabelForIP = ref<Omit<SourceIPLabel, 'id'>>({
   key: '',
   label: '',
 })
 
 const handlerLabelAdd = () => {
-  if (!newLabelForIP.key || !newLabelForIP.label) {
+  if (!newLabelForIP.value.key || !newLabelForIP.value.label) {
     return
   }
 
   dialogVisible.value = true
   sourceIPLabelList.value.push({
-    key: newLabelForIP.key,
-    label: newLabelForIP.label,
+    ...newLabelForIP.value,
     id: uuid(),
   })
 
-  newLabelForIP.key = ''
-  newLabelForIP.label = ''
+  newLabelForIP.value = {
+    key: '',
+    label: '',
+  }
 }
 
 const handlerLabelRemove = (id: string) => {
@@ -143,12 +122,12 @@ const handlerLabelRemove = (id: string) => {
   )
 }
 
-const handlerLabelKeyChange = (id: string, path: 'key' | 'label', value: string) => {
-  const key = value
-  const source = sourceIPLabelList.value.find((item) => item.id === id)
+const handlerLabelUpdate = (sourceIP: Partial<SourceIPLabel>) => {
+  const index = sourceIPLabelList.value.findIndex((item) => item.id === sourceIP.id)
 
-  if (source) {
-    source[path] = key
+  sourceIPLabelList.value[index] = {
+    ...sourceIPLabelList.value[index],
+    ...sourceIP,
   }
 }
 </script>

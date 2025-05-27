@@ -1,15 +1,31 @@
-import { fetchConnectionsAPI } from '@/api'
+import { disconnectByIdAPI, fetchConnectionsAPI } from '@/api'
 import { CONNECTION_TAB_TYPE, SORT_DIRECTION, SORT_TYPE } from '@/constant'
 import { getChainsStringFromConnection, getInboundUserFromConnection } from '@/helper'
 import type { Connection, ConnectionRawMessage } from '@/types'
-import { useStorage } from '@vueuse/core'
+import { useStorage, watchOnce } from '@vueuse/core'
 import dayjs from 'dayjs'
 import { differenceWith } from 'lodash'
 import { computed, ref, watch } from 'vue'
-import { useConnectionCard } from './settings'
+import { autoDisconnectIdleUDP, autoDisconnectIdleUDPTime, useConnectionCard } from './settings'
+
+export const connectionTabShow = ref(CONNECTION_TAB_TYPE.ACTIVE)
+export const connectionSortType = useStorage<SORT_TYPE>(
+  'config/connection-sort-type',
+  SORT_TYPE.HOST,
+)
+export const connectionSortDirection = useStorage<SORT_DIRECTION>(
+  'config/connection-sort-direction',
+  SORT_DIRECTION.ASC,
+)
+
+export const quickFilterRegex = useStorage<string>('config/quick-filter-regex', 'direct|dns-out')
+export const quickFilterEnabled = useStorage<boolean>('config/quick-filter-enabled', false)
+export const connectionFilter = ref('')
+export const sourceIPFilter = ref<string[] | null>(null)
 
 export const activeConnections = ref<Connection[]>([])
 export const closedConnections = ref<Connection[]>([])
+export const isPaused = ref(false)
 
 export const downloadTotal = ref(0)
 export const uploadTotal = ref(0)
@@ -70,15 +86,26 @@ export const initConnections = () => {
       }) ?? []
   })
 
+  if (autoDisconnectIdleUDP.value) {
+    watchOnce(activeConnections, () => {
+      activeConnections.value
+        .filter((conn) => conn.metadata.network !== 'tcp')
+        .forEach((conn) => {
+          const now = dayjs()
+          const start = dayjs(conn.start)
+
+          if (now.diff(start, 'minute') > autoDisconnectIdleUDPTime.value) {
+            disconnectByIdAPI(conn.id)
+          }
+        })
+    })
+  }
+
   cancel = () => {
     unwatch()
     ws.close()
   }
 }
-
-export const quickFilterRegex = useStorage<string>('config/quick-filter-regex', 'direct|dns-out')
-export const quickFilterEnabled = useStorage<boolean>('config/quick-filter-enabled', false)
-export const connectionTabShow = ref(CONNECTION_TAB_TYPE.ACTIVE)
 
 const isDesc = computed(() => {
   return connectionSortDirection.value === SORT_DIRECTION.DESC
@@ -123,18 +150,6 @@ const sortFunctionMap: Record<SORT_TYPE, (a: Connection, b: Connection) => numbe
     return getInboundUserFromConnection(a).localeCompare(getInboundUserFromConnection(b))
   },
 }
-
-export const connectionSortType = useStorage<SORT_TYPE>(
-  'config/connection-sort-type',
-  SORT_TYPE.HOST,
-)
-export const connectionSortDirection = useStorage<SORT_DIRECTION>(
-  'config/connection-sort-direction',
-  SORT_DIRECTION.ASC,
-)
-export const connectionFilter = ref('')
-export const sourceIPFilter = ref<string[] | null>(null)
-export const isPaused = ref(false)
 
 export const connections = computed(() => {
   return connectionTabShow.value === CONNECTION_TAB_TYPE.ACTIVE

@@ -1,18 +1,21 @@
 import { updateProxyProviderAPI } from '@/api'
 import { collapsedBus } from '@/composables/bus'
-import { proxiesFilter, useProxies } from '@/composables/proxies'
+import { renderGroups } from '@/composables/proxies'
 import { PROXY_SORT_TYPE, PROXY_TAB_TYPE } from '@/constant'
 import { getMinCardWidth, isMiddleScreen } from '@/helper/utils'
 import { configs, updateConfigs } from '@/store/config'
 import {
   allProxiesLatencyTest,
   fetchProxies,
+  proxiesFilter,
+  proxiesTabShow,
   proxyGroupList,
   proxyProviederList,
 } from '@/store/proxies'
 import {
   automaticDisconnection,
   collapseGroupMap,
+  groupProxiesByProvider,
   hideUnavailableProxies,
   manageHiddenGroup,
   minProxyCardWidth,
@@ -43,7 +46,6 @@ export default defineComponent({
   },
   setup(props) {
     const { t } = useI18n()
-    const { proxiesTabShow } = useProxies()
     const isUpgrading = ref(false)
     const isAllLatencyTesting = ref(false)
     const settingsModel = ref(false)
@@ -90,7 +92,6 @@ export default defineComponent({
       }
     }
 
-    const { renderGroups } = useProxies()
     const hasNotCollapsed = computed(() => {
       return renderGroups.value.some((name) => collapseGroupMap.value[name])
     })
@@ -252,6 +253,14 @@ export default defineComponent({
               <div class="flex items-center gap-2">
                 {t('sortBy')}
                 {sort}
+              </div>
+              <div class="flex items-center gap-2">
+                {t('groupProxiesByProvider')}
+                <input
+                  type="checkbox"
+                  class="toggle"
+                  v-model={groupProxiesByProvider.value}
+                />
               </div>
               <div class="flex items-center gap-2">
                 {t('unavailableProxy')}

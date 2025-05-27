@@ -10,7 +10,7 @@ export const useTooltip = () => {
 
   const showTip = (event: Event, content: string | HTMLElement, config: Partial<Props> = {}) => {
     tippyInstance?.destroy()
-    tippyInstance = tippy(event.target as HTMLElement, {
+    tippyInstance = tippy(event.currentTarget as HTMLElement, {
       content,
       placement: 'top',
       animation: 'scale',
@@ -32,5 +32,20 @@ export const useTooltip = () => {
   return {
     showTip,
     hideTip,
+  }
+}
+
+const { showTip } = useTooltip()
+
+export const checkTruncation = (e: Event) => {
+  const target = e.target as HTMLElement
+  const { scrollWidth, clientWidth } = target
+
+  if (scrollWidth > clientWidth) {
+    showTip(e, target.innerText, {
+      delay: [700, 0],
+      trigger: 'mouseenter',
+      touch: ['hold', 500],
+    })
   }
 }

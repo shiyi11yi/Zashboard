@@ -3,9 +3,10 @@
     ref="cardRef"
     :class="
       twMerge(
-        'bg-base-200 flex cursor-pointer flex-col items-start gap-1 rounded-md',
-        active ? 'bg-primary text-primary-content' : 'sm:hover:bg-base-300',
-        isSmallCard ? 'p-1' : 'p-2',
+        'bg-base-200 flex cursor-pointer flex-col items-start rounded-md',
+        active ? 'bg-primary text-primary-content sm:hover:bg-primary/95' : 'sm:hover:bg-base-300',
+        isSmallCard ? 'gap-1 p-1' : 'gap-2 p-2',
+        latencyTipAnimationClass,
       )
     "
     @contextmenu.stop.prevent="handlerLatencyTest"
@@ -34,7 +35,7 @@
         {{ typeDescription }}
       </span>
       <LatencyTag
-        :class="[isSmallCard && 'h-4! w-8!', 'shrink-0']"
+        :class="[isSmallCard && 'h-4! w-8! rounded-md!', 'shrink-0']"
         :name="node.name"
         :loading="isLatencyTesting"
         :group-name="groupName"
@@ -45,12 +46,15 @@
 </template>
 
 <script setup lang="ts">
-import { PROXY_CARD_SIZE } from '@/constant'
-import { useTooltip } from '@/helper/tooltip'
+import { PROXY_CARD_SIZE, PROXY_SORT_TYPE } from '@/constant'
+import { checkTruncation } from '@/helper/tooltip'
+import { scrollIntoCenter } from '@/helper/utils'
+import { i18n } from '@/i18n'
 import { getIPv6ByName, getTestUrl, proxyLatencyTest, proxyMap } from '@/store/proxies'
-import { IPv6test, proxyCardSize, truncateProxyName } from '@/store/settings'
+import { IPv6test, proxyCardSize, proxySortType, truncateProxyName } from '@/store/settings'
+import { smartWeightsMap } from '@/store/smart'
 import { twMerge } from 'tailwind-merge'
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import LatencyTag from './LatencyTag.vue'
 import ProxyIcon from './ProxyIcon.vue'
 
@@ -60,20 +64,7 @@ const props = defineProps<{
   groupName?: string
 }>()
 
-const { showTip } = useTooltip()
-const checkTruncation = (e: Event) => {
-  const target = e.target as HTMLElement
-  const { scrollWidth, clientWidth } = target
-
-  if (scrollWidth > clientWidth) {
-    showTip(e, target.innerText, {
-      delay: [1000, 0],
-      trigger: 'mouseenter',
-      touch: ['hold', 500],
-    })
-  }
-}
-
+const cardRef = ref()
 const node = computed(() => proxyMap.value[props.name])
 const isLatencyTesting = ref(false)
 const typeFormatter = (type: string) => {
@@ -87,11 +78,15 @@ const typeFormatter = (type: string) => {
 const isSmallCard = computed(() => proxyCardSize.value === PROXY_CARD_SIZE.SMALL)
 const typeDescription = computed(() => {
   const type = typeFormatter(node.value.type)
+  const smartUsage = smartWeightsMap.value[props.groupName ?? '']?.[props.name]
+  const smartDesc = smartUsage ? i18n.global.t(smartUsage) : ''
   const isV6 = IPv6test.value && getIPv6ByName(node.value.name) ? 'IPv6' : ''
   const isUDP = node.value.udp ? (node.value.xudp ? 'xudp' : 'udp') : ''
 
-  return [type, isUDP, isV6].filter(Boolean).join(isSmallCard.value ? '/' : ' / ')
+  return [type, isUDP, smartDesc, isV6].filter(Boolean).join(isSmallCard.value ? '/' : ' / ')
 })
+
+const latencyTipAnimationClass = ref<string[]>([])
 const handlerLatencyTest = async () => {
   if (isLatencyTesting.value) return
 
@@ -102,7 +97,28 @@ const handlerLatencyTest = async () => {
   } catch {
     isLatencyTesting.value = false
   }
+
+  if (
+    [PROXY_SORT_TYPE.LATENCY_ASC, PROXY_SORT_TYPE.LATENCY_DESC].includes(proxySortType.value) &&
+    cardRef.value
+  ) {
+    const classList = ['bg-info/20!', 'transition-colors', 'duration-1500']
+
+    scrollIntoCenter(cardRef.value)
+    latencyTipAnimationClass.value = classList
+    setTimeout(() => {
+      latencyTipAnimationClass.value = []
+    }, 1500)
+  }
 }
+
+onMounted(() => {
+  if (props.active) {
+    setTimeout(() => {
+      scrollIntoCenter(cardRef.value)
+    }, 300)
+  }
+})
 </script>
 
 <style scoped>
