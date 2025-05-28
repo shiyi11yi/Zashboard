@@ -44,7 +44,7 @@ import { isMiddleScreen } from '@/helper/utils'
 import { fetchProxies, proxiesTabShow } from '@/store/proxies'
 import { twoColumnProxyGroup } from '@/store/settings'
 import { useElementSize, useSessionStorage } from '@vueuse/core'
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 
 const proxiesRef = ref()
 const { width } = useElementSize(proxiesRef)
@@ -70,16 +70,14 @@ const waitTickUntilReady = (startTime = performance.now()) => {
   }
 }
 
+watch(proxiesTabShow, () =>
+  nextTick(() => {
+    waitTickUntilReady()
+  }),
+)
+
 onMounted(() => {
-  watch(
-    proxiesTabShow,
-    () => {
-      waitTickUntilReady()
-    },
-    {
-      immediate: true,
-    },
-  )
+  waitTickUntilReady()
 })
 
 const isSmallScreen = computed(() => {
