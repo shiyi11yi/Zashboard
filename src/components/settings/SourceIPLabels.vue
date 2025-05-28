@@ -22,7 +22,7 @@
     :class="dialogVisible ? 'collapse-open' : ''"
   >
     <div class="collapse-content p-0">
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-2 pt-4">
         <Draggable
           v-if="dialogVisible"
           class="flex flex-1 flex-col gap-2"

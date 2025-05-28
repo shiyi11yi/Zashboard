@@ -166,6 +166,25 @@
   @apply border-l-base-100;
 }
 
+.tippy-box[data-theme^='transparent'] {
+  @apply rounded-lg;
+  .tippy-content {
+    @apply p-0;
+  }
+}
+.tippy-box[data-theme^='transparent'][data-placement^='top'] {
+  @apply -mb-2;
+}
+.tippy-box[data-theme^='transparent'][data-placement^='right'] {
+  @apply -ml-2;
+}
+.tippy-box[data-theme^='transparent'][data-placement^='bottom'] {
+  @apply -mt-2;
+}
+.tippy-box[data-theme^='transparent'][data-placement^='left'] {
+  @apply -mr-2;
+}
+
 .slide-right-enter-active,
 .slide-right-leave-active,
 .slide-left-enter-active,

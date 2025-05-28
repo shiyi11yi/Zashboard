@@ -1,32 +1,17 @@
 <template>
-  <div class="dropdown join-item input input-sm inline w-48 p-0">
-    <div
-      tabindex="0"
-      role="button"
-      class="flex h-full w-full cursor-pointer items-center indent-4"
-    >
+  <div
+    class="join-item input input-sm inline w-48 p-0"
+    @click="handlerDropdown"
+  >
+    <div class="flex h-full w-full cursor-pointer items-center indent-4">
       {{ theme }}
     </div>
-    <ul
-      class="dropdown-content card mt-2 h-96 w-48 overflow-y-auto overscroll-contain shadow-2xl"
-      tabindex="0"
-    >
-      <li
-        v-for="themeName in themes"
-        :key="themeName"
-        @click="theme = themeName"
-        class="hover:bg-base-200 flex cursor-pointer items-center gap-2 p-2"
-        :data-theme="themeName"
-      >
-        <div class="bg-primary rounded-field h-3 w-5 shadow"></div>
-        <span :class="{ 'font-bold': theme === themeName }">{{ themeName }}</span>
-      </li>
-    </ul>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ALL_THEME } from '@/constant'
+import { useTooltip } from '@/helper/tooltip'
 import { customThemes } from '@/store/settings'
 import { computed } from 'vue'
 
@@ -42,4 +27,43 @@ const themes = computed(() => {
 
   return ALL_THEME
 })
+
+const { showTip, hideTip } = useTooltip()
+const handlerDropdown = (e: Event) => {
+  const themeCotainer = document.createElement('div')
+
+  themeCotainer.className = 'card h-96 w-48 overflow-y-auto overscroll-contain shadow-2xl'
+
+  for (const themeName of themes.value) {
+    const item = document.createElement('div')
+    const primary = document.createElement('div')
+    const label = document.createElement('span')
+
+    item.dataset.theme = themeName
+
+    item.className = 'flex cursor-pointer items-center gap-2 p-2 bg-base-100 hover:bg-base-200'
+    primary.className = 'h-3 w-5 shadow rounded-field bg-primary'
+
+    label.textContent = themeName
+
+    item.append(primary)
+    item.append(label)
+
+    item.addEventListener('click', () => {
+      theme.value = themeName
+      hideTip()
+    })
+
+    themeCotainer.append(item)
+  }
+
+  showTip(e, themeCotainer, {
+    theme: 'transparent',
+    placement: 'bottom-start',
+    trigger: 'click',
+    appendTo: document.body,
+    interactive: true,
+    arrow: false,
+  })
+}
 </script>

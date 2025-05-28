@@ -196,7 +196,7 @@ import {
   PlusIcon,
 } from '@heroicons/vue/24/outline'
 import { twMerge } from 'tailwind-merge'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import ImportSettings from '../common/ImportSettings.vue'
 import TextInput from '../common/TextInput.vue'
 import CustomTheme from './CustomTheme.vue'
@@ -204,6 +204,13 @@ import ThemeSelector from './ThemeSelector.vue'
 
 const customThemeModal = ref(false)
 const displayBgProperty = ref(false)
+
+watch(customBackgroundURL, (value) => {
+  if (value) {
+    displayBgProperty.value = true
+  }
+})
+
 const inputFileRef = ref()
 const handlerClickUpload = () => {
   inputFileRef.value?.click()
