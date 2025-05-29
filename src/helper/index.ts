@@ -66,8 +66,11 @@ export const sortAndFilterProxyNodes = (proxies: string[], groupName?: string) =
   }
 
   if (proxiesFilter.value) {
+    const filters = proxiesFilter.value.split(' ').map((f) => f.toLowerCase().trim())
+
     proxies = proxies.filter((name) => {
-      return name.toLowerCase().includes(proxiesFilter.value.toLowerCase())
+      name = name.toLowerCase()
+      return filters.every((f) => name.includes(f))
     })
   }
 
