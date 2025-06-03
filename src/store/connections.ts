@@ -158,7 +158,8 @@ export const connections = computed(() => {
 })
 
 export const renderConnections = computed(() => {
-  const lowerCaseFilter = connectionFilter.value?.toLowerCase()
+  const lowerCaseFilter = connectionFilter.value.split(' ').map((f) => f.toLowerCase().trim())
+
   let regex: RegExp | null = null
 
   if (quickFilterEnabled.value && quickFilterRegex.value) {
@@ -198,7 +199,7 @@ export const renderConnections = computed(() => {
       }
 
       if (connectionFilter.value) {
-        return metadatas.some((i) => i?.toLowerCase().includes(lowerCaseFilter))
+        return lowerCaseFilter.every((i) => metadatas.some((j) => j?.toLowerCase().includes(i)))
       }
 
       return true

@@ -116,7 +116,7 @@ export default defineComponent({
         <TextInput
           class="w-full md:w-80"
           v-model={rulesFilter.value}
-          placeholder={t('search')}
+          placeholder={`${t('search')} | ${t('searchMultiple')}`}
           clearable={true}
         />
       )

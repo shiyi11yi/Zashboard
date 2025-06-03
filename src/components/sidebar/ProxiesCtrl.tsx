@@ -235,7 +235,7 @@ export default defineComponent({
         <TextInput
           class={props.horizontal && !isMiddleScreen.value ? 'w-32 max-w-80 flex-1' : 'w-80'}
           v-model={proxiesFilter.value}
-          placeholder={t('search')}
+          placeholder={`${t('search')} | ${t('searchMultiple')}`}
           clearable={true}
         />
       )
